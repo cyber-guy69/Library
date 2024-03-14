@@ -15,7 +15,6 @@ public class Book
 	public string Genre { get; set; }
 	[Column(name: "author_id")]
 	public long AuthorId { get; set; }
-
 	public Author? Author { get; set; }
 
 }

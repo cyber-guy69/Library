@@ -8,14 +8,14 @@
 @page "/books"
 
 @code {
-	//	private List<Author> AuthorsList { get; set; } = new();
+
 	private List<Book> BooksList { get; set; } = new();
 
 
 	protected override async Task OnInitializedAsync()
 	{
 		BooksList = await BookService.getAllBooksAsync();
-		//	AuthorsList = await Authorservice.getAuthorsAsync();
+
 	}
 
 	public string NavigateToShow(long id)

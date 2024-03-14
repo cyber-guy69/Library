@@ -15,23 +15,12 @@
 	protected override async Task OnInitializedAsync()
 	{
 		Book = await BookService.getBookByIdAsync(Id);
-		Book.ImagePath = $"/images/{Book.ImageFileName}";
+
 	}
 
 
 }
 <h1>Books Details</h1>
-@* <p><img src="@Book.ImagePath" asp-append-version="true" width="400px" /></p> *@
-<div>
-	@if (Book.ImageFileName != null)
-	{
-		<img src="@($"~/images/{Book.ImageFileName}")" asp-append-version="true" width="400px" />
-	}
-	else
-	{
-		<img src="~/images/no-image.png" alt="Book image unavailable" width="400px" />
-	}
-</div>
 <p></p>
 <div class="row">
 	<div class="col-md-6">
