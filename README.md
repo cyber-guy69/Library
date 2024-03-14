@@ -32,7 +32,7 @@ To run this project locally, follow these steps:
    (https://github.com/cyber-guy69/Library.git)
 
 2. **Open Solution in Visual Studio**: 
-Open Visual Studio and navigate to the cloned repository directory. Open the solution file (`ProjectLibrary.sln`).
+Open Visual Studio and navigate to the cloned repository directory. Open the solution file (`Library.sln`).
 
 3. **Set up MySQL Database**: 
 - Create a new MySQL database.
@@ -54,5 +54,5 @@ Run the Blazor Web Application project to start the web server and access the li
 
 - **Console Application**: Follow the prompts to perform actions such as adding authors, adding books, listing authors, listing books, etc.
 - **LibraryAPI**: Send HTTP requests to perform CRUD operations on authors and books. Refer to the API documentation for details on available endpoints and payloads.
-- **Blazor Web Application**: Use the web interface to add, edit, and delete authors and books.
+- **Blazor Web Application**: Use the web interface to add, edit, view, and delete authors and books.
 
