@@ -1,0 +1,72 @@
+﻿@inject BookService BookService
+@inject NavigationManager NavigationManager
+@inject AuthorService Authorservice
+
+@using LibraryWeb.Models
+@using LibraryWeb.Services
+
+@page "/books"
+
+@code {
+	//	private List<Author> AuthorsList { get; set; } = new();
+	private List<Book> BooksList { get; set; } = new();
+
+
+	protected override async Task OnInitializedAsync()
+	{
+		BooksList = await BookService.getAllBooksAsync();
+		//	AuthorsList = await Authorservice.getAuthorsAsync();
+	}
+
+	public string NavigateToShow(long id)
+	{
+		NavigationManager.NavigateTo($"/books/{id}/show", forceLoad: false);
+		return "";
+	}
+
+	public string NavigateToDelete(long id)
+	{
+		NavigationManager.NavigateTo($"/books/{id}/delete", forceLoad: false);
+		return "";
+	}
+
+	public string NavigateToEdit(long id)
+	{
+		NavigationManager.NavigateTo($"/books/{id}/edit", forceLoad: false);
+		return "";
+	}
+}
+
+<h3>Book List</h3>
+
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th>Title</th>
+			<th>Genre</th>
+			<th>Author</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var book in BooksList)
+		{
+			<tr>
+				<td>@book.Title</td>
+				<td>@book.Genre</td>
+				<td>
+					<span>@book.Author.Name</span>
+					<span>@book.Author.Surname</span>
+				</td>
+
+				<td>
+					<button class="btn btn-outline-warning btn-sm" @onclick="@(() => NavigateToShow(book.Id))">Show</button>
+					<button class="btn btn-success btn-sm" @onclick="@(() => NavigateToEdit(book.Id))">Edit</button>
+					<button class="btn btn-danger btn-sm" @onclick="@(() => NavigateToDelete(book.Id))">Delete</button>
+
+
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>

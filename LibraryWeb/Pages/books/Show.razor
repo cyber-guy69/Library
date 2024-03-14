@@ -1,0 +1,63 @@
+﻿@using LibraryWeb.Models
+@using LibraryWeb.Services
+
+@inject BookService BookService
+@inject NavigationManager NavigationManager
+
+@page "/books/{id:long}/show"
+@code {
+	[Parameter]
+
+	public long Id { get; set; }
+
+	private Book Book { get; set; } = new Book();
+
+	protected override async Task OnInitializedAsync()
+	{
+		Book = await BookService.getBookByIdAsync(Id);
+		Book.ImagePath = $"/images/{Book.ImageFileName}";
+	}
+
+
+}
+<h1>Books Details</h1>
+@* <p><img src="@Book.ImagePath" asp-append-version="true" width="400px" /></p> *@
+<div>
+	@if (Book.ImageFileName != null)
+	{
+		<img src="@($"~/images/{Book.ImageFileName}")" asp-append-version="true" width="400px" />
+	}
+	else
+	{
+		<img src="~/images/no-image.png" alt="Book image unavailable" width="400px" />
+	}
+</div>
+<p></p>
+<div class="row">
+	<div class="col-md-6">
+		<p><strong>Title:</strong> @Book.Title</p>
+	</div>
+	<div class="col-md-6">
+		<p><strong>Genre:</strong> @Book.Genre</p>
+	</div>
+	<div class="col-md-6">
+		<p>
+			<strong>Author:</strong>
+			@if (Book.Author != null)
+			{
+				@($"{Book.Author.Name} {@Book.Author.Surname}")
+				;
+			}
+			else
+			{
+				<em>Author information not available</em>
+			}
+		</p>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<a class="btn btn-primary" @onclick="@(() => NavigationManager.NavigateTo($"/authors/{Book.Id}/edit", forceLoad: false))">Edit</a>
+		<a class="btn btn-danger" @onclick="@(() => NavigationManager.NavigateTo($"/books/{Book.Id}/delete", forceLoad: false))">Delete</a>
+	</div>
+</div>

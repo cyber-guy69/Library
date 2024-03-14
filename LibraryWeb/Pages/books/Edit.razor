@@ -1,0 +1,58 @@
+﻿@inject BookService BookService
+@inject AuthorService AuthorService
+@inject NavigationManager NavigationManager
+
+@using LibraryWeb.Models
+@using LibraryWeb.Services
+@using System.Text
+
+@page "/books/{id:long}/edit"
+
+@code {
+	[Parameter]
+
+	public long Id { get; set; }
+	string id = "";
+	private List<Author> authorList = new List<Author>();
+	private Book bookToEdit = new Book();
+
+	protected override async Task OnInitializedAsync()
+	{
+		authorList = await AuthorService.getAuthorsAsync();
+		bookToEdit = await BookService.getBookByIdAsync(Id);
+		id = bookToEdit.AuthorId.ToString();
+
+	}
+
+	private async Task HandleSubmit()
+	{
+		bookToEdit.AuthorId = Convert.ToInt64(id);
+		await BookService.EditBookById(bookToEdit);
+		NavigationManager.NavigateTo("/books");
+	}
+
+}
+
+<EditForm Model="@bookToEdit" OnValidSubmit="@HandleSubmit">
+	<ValidationSummary />
+	<div class="form-group">
+		<label for="title">Title:</label>
+		<InputText id="title" @bind-Value="bookToEdit.Title" class="form-control" />
+
+	</div>
+	<div class="form-group">
+		<label for="genre">Genre:</label>
+		<InputText id="genre" @bind-Value="bookToEdit.Genre" class="form-control" />
+	</div>
+	<div class="form-group">
+		<label for="authorId">AuthorId:</label>
+		<InputSelect id="Author id" @bind-Value="id" class="form-control">
+			<option value="">None</option>
+			@foreach (var author in authorList)
+			{
+				<option value="@author.Id">@author.Name @author.Surname</option>
+			}
+		</InputSelect>
+	</div>
+	<button type="submit" class="btn btn-primary">Update</button>
+</EditForm>

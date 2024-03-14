@@ -1,0 +1,75 @@
+﻿@inject AuthorService AuthorService
+@inject BookService BookService
+@inject NavigationManager NavigationManager
+
+
+@using LibraryWeb.Models
+@using LibraryWeb.Services
+
+
+@page "/authors"
+@code {
+	private List<Author> AuthorList { get; set; } = new();
+
+
+
+	protected override async Task OnInitializedAsync()
+	{
+		AuthorList = await AuthorService.getAuthorsAsync();
+
+	}
+
+	private string NavigateToDelete(long authorId)
+	{
+		NavigationManager.NavigateTo($"/authors/{authorId}/delete", forceLoad: false);
+		return "";
+	}
+
+	private string NavigateToShow(long id)
+	{
+		NavigationManager.NavigateTo($"/authors/{id}/show", forceLoad: false);
+		return "";
+	}
+
+
+	private string NavigateToEdit(long id)
+	{
+		NavigationManager.NavigateTo($"/authors/{id}/edit", forceLoad: false);
+		return "";
+	}
+}
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Surname</th>
+			<th>Action</th>
+			<th>Total books</th>
+			<th>Books Titles</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var author in AuthorList)
+		{
+			<tr>
+				<td>@author.Name</td>
+				<td>@author.Surname</td>
+				<td>
+
+					<button class="btn btn-danger btn-sm" @onclick="@(() => NavigateToDelete(author.Id))">Delete</button>
+					<button class="btn btn-outline-warning btn-sm" @onclick="@(() => NavigateToShow(author.Id))">Show</button>
+					<button class="btn btn-light btn-sm" @onclick="@(() => NavigateToEdit(author.Id))">Edit</button>
+
+				</td>
+				<td>@author.Books.Count()</td>
+				<td>
+					@foreach (var book in author.Books)
+					{
+						<div>@book.Title</div>
+					}
+				</td>
+
+			</tr>
+		}
+	</tbody>
+</table>

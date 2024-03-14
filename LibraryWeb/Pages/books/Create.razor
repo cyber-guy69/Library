@@ -1,0 +1,92 @@
+﻿@using LibraryWeb.Models
+@using LibraryWeb.Services
+
+
+@inject BookService BookService
+@inject NavigationManager NavigationManager
+@inject AuthorService AuthorService
+
+@page "/books/create"
+
+@code {
+	private bool state = false;
+	private List<Author> authorList = new List<Author>();
+	private Book NewBook = new Book();
+	private List<string> validationErrors = new List<string>();
+
+	string id = "";
+
+	protected override async Task OnInitializedAsync()
+	{
+		authorList = await AuthorService.getAuthorsAsync();
+	}
+
+
+
+	private async Task HandleSubmit()
+	{
+		try
+		{
+			validationErrors.Clear();
+			NewBook.AuthorId = Convert.ToInt64(id);
+			var errors = await BookService.CreateBookAsync(NewBook);
+			if (errors.Count > 0)
+			{
+				validationErrors = errors;
+			}
+			else
+			{
+				NavigationManager.NavigateTo("/books");
+			}
+
+
+		}
+		catch (Exception ex)
+		{
+			validationErrors.Add("An error occurred while creating the book. Wrong Title or Genre format");
+		}
+	}
+
+}
+<h1>Create Book</h1>
+
+@if (validationErrors.Count > 0)
+{
+	<div class="alert alert-danger">
+		<ul>
+			@foreach (var error in validationErrors)
+			{
+				<li>@error</li>
+			}
+		</ul>
+
+	</div>
+}
+<div>
+	<EditForm Model="@NewBook" OnValidSubmit="@HandleSubmit">
+		<ValidationSummary />
+		<div class="form-group">
+			<label for="title">Title:</label>
+			<InputText id="title" @bind-Value="NewBook.Title" class="form-control" />
+			<ValidationMessage For="@(() => NewBook.Title)" />
+		</div>
+		<div class="form-group">
+			<label for="genre">Genre:</label>
+			<InputText id="genre" @bind-Value="NewBook.Genre" class="form-control" />
+			<ValidationMessage For="@(() => NewBook.Genre)" />
+		</div>
+
+
+		<div class="form-group">
+			<label for="authorId">Author ID:</label>
+			<InputSelect id="authorId" @bind-Value="id" class="form-control">
+				<option value="">None</option>
+				@foreach (var author in authorList)
+				{
+					<option value="@author.Id">@author.Name @author.Surname</option>
+				}
+			</InputSelect>
+		</div>
+		<button type="submit" class="btn btn-primary">Create</button>
+	</EditForm>
+</div>
